@@ -2,6 +2,7 @@
 deb-setup.diff
 deb-locations.diff
 distutils-install-layout.diff
+#sysconfig-debian-schemes.diff
 locale-module.diff
 distutils-link.diff
 distutils-sysconfig.diff
@@ -30,8 +31,8 @@ ensurepip-disabled.diff
 mangle-fstack-protector.diff
 reproducible-buildinfo.diff
 pydoc-use-pager.diff
-pyhash.diff
 mips-r6.diff
 local-doc-references.diff
 doc-build-texinfo.diff
 riscv64.diff
+build-math-object.diff

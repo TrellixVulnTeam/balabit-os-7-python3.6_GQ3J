@@ -37,9 +37,6 @@ TESTPYTHON="python3.6dm -W default -bb -E -R -m test"
 TESTOPTS="-j 1 -w -uall,-network,-urlfetch,-gui"
 TESTEXCLUSIONS="-x"
 
-# test_code_module: http://bugs.python.org/issue25109
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_code_module"
-
 # test_dbm: Fails from time to time ...
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
 
@@ -49,9 +46,6 @@ TESTEXCLUSIONS="$TESTEXCLUSIONS test_ensurepip test_venv "
 
 # test_site: Investigate why this fails ... our package has one sitedir less
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_site"
-
-# test_zipfile: Issue 17753, requires write access to test and email.test
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_zipfile"
 
 TESTEXCLUSIONS="$TESTEXCLUSIONS test_socket"
 

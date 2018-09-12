@@ -4,12 +4,7 @@ unexport LANG LC_ALL LC_CTYPE LC_COLLATE LC_TIME LC_NUMERIC LC_MESSAGES
 unexport CFLAGS CXXFLAGS LDFLAGS CPPFLAGS
 
 export DEB_BUILD_MAINT_OPTIONS=hardening=-pie
-export DEB_BUILD_MAINT_OPTIONS=hardening=-pie
-DEB_BUILD_MAINT_OPTIONS := hardening=-pie
-export DEB_BUILD_MAINT_OPTIONS
-
-#DEB_MAINT_BUILD_OPTIONS := hardening=-pie
-#export DEB_MAINT_BUILD_OPTIONS
+dpkg_buildflags = DEB_BUILD_MAINT_OPTIONS=$(DEB_BUILD_MAINT_OPTIONS) dpkg-buildflags
 
 export SHELL = /bin/bash
 
@@ -90,7 +85,7 @@ derivative := $(shell if dpkg-vendor --derives-from Ubuntu; then echo Ubuntu; \
 		else echo Unknown; fi)
 
 VER=3.6
-SVER=3.6.4~rc1
+SVER=3.6.5
 NVER=3.7
 PVER=python$(VER)
 EXT_VER=$(subst .,,$(VER))
@@ -155,13 +150,19 @@ endif
 
 CC=$(DEB_HOST_GNU_TYPE)-gcc
 CXX=$(DEB_HOST_GNU_TYPE)-g++
+ifneq (,$(filter $(distrelease),sid buster bionic cosmic))
+  CC=$(DEB_HOST_GNU_TYPE)-gcc-8
+  CXX=$(DEB_HOST_GNU_TYPE)-g++-8
+  bd_gcc = g++-8,
+endif
 
 AR=$(DEB_HOST_GNU_TYPE)-ar
 RANLIB=$(DEB_HOST_GNU_TYPE)-ranlib
 
-DPKG_CPPFLAGS:= $(shell dpkg-buildflags --get CPPFLAGS)
-DPKG_CFLAGS  = $(shell DEB_BUILD_MAINT_OPTIONS=hardening=-pie dpkg-buildflags --get CFLAGS)
-DPKG_LDFLAGS := $(shell DEB_BUILD_MAINT_OPTIONS=hardening=-pie dpkg-buildflags --get LDFLAGS)
+DPKG_CPPFLAGS= $(shell $(dpkg_buildflags) --get CPPFLAGS)
+DPKG_CFLAGS  := $(shell $(dpkg_buildflags) --get CFLAGS)
+DPKG_CFLAGS  := $(subst -fstack-protector-strong,-fstack-protector,$(DPKG_CFLAGS))
+DPKG_LDFLAGS = $(shell $(dpkg_buildflags) --get LDFLAGS)
 OPT_CFLAGS   := $(filter-out -O%,$(DPKG_CFLAGS)) # default is -O3
 DEBUG_CFLAGS := $(patsubst -O%,-Og,$(DPKG_CFLAGS))
 
@@ -203,9 +204,6 @@ ifneq (,$(findstring noopt, $(DEB_BUILD_OPTIONS)))
     with_lto =
 endif
 
-    with_pgo =
-    with_lto =
-
 ifeq ($(with_lto),yes)
     LTO_CFLAGS = -g -flto -fuse-linker-plugin
     with_fat_lto := $(shell dpkg --compare-versions $$($(CC) --version \
@@ -217,6 +215,17 @@ ifeq ($(with_lto),yes)
     AR=$(DEB_HOST_GNU_TYPE)-gcc-ar
     RANLIB=$(DEB_HOST_GNU_TYPE)-gcc-ranlib
 endif
+
+sysconfig_substflags = \
+	-e 's,gcc-8,gcc,;s,g++-8,g++,' \
+	-e '/^OPT/s,-O3,-O2,' \
+	-e 's/-O3/-O2/g;s/$(LTO_CFLAGS)//g' \
+	-e 's/-fprofile-use *-fprofile-correction//g' \
+	-e 's/-fstack-protector /-fstack-protector-strong /g' \
+	-e 's/-specs=[^ ]*//g' \
+	-e 's/-fdebug-prefix-map=[^ ]*//g' \
+	-e 's,^RUNSHARED *=.*,RUNSHARED=,' \
+	-e '/BLDLIBRARY/s/-L\. //'
 
 make_build_target = $(if $(with_pgo),profile-opt)
 
@@ -307,6 +316,7 @@ ifeq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
 	cd $(buildd_static) && ./python -c 'from _multiprocessing import SemLock'
   endif
 	cd $(buildd_static) && ./python -c 'import _decimal'
+	cd $(buildd_static) && ./python -c 'import math, cmath'
 endif
 
 	touch stamps/stamp-build-static
@@ -329,6 +339,10 @@ stamps/stamp-build-debug: stamps/stamp-configure-debug
 	dh_testdir
 	$(MAKE) $(NJOBS) -C $(buildd_debug) \
 		EXTRA_CFLAGS="$(DEBUG_CFLAGS)"
+
+	cd $(buildd_static) && ./python -c 'import _decimal'
+	cd $(buildd_debug) && ./python -c 'import math, cmath'
+
 	touch stamps/stamp-build-debug
 
 stamps/stamp-build-shared-debug: stamps/stamp-configure-shared-debug
@@ -810,9 +824,7 @@ stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
 ifeq ($(with_interp),static)
 	$(MAKE) -C $(buildd_static) install DESTDIR=$(CURDIR)/$(d)
 	ls -l $(d)/$(scriptdir)/_sysconfigdata*
-	sed -e '/^OPT/s,-O3,-O2,' \
-	    -e 's/$(LTO_CFLAGS)//g' \
-	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
+	sed $(sysconfig_substflags) \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shared)/$(shell cat $(buildd_shared)/pybuilddir.txt)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
 		> $(d)/$(scriptdir)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py
@@ -824,7 +836,7 @@ endif
 		$(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/.
 	rm -f $(d)/$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/$(scriptdir)/_sysconfigdata*
-	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
+	sed -i $(sysconfig_substflags) \
 		$(d)/$(scriptdir)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 
 	-find $(d)/usr/lib/python$(VER) -name '*_failed*.so'
@@ -913,6 +925,9 @@ endif
 	: # install the Makefile of the shared python build
 	sed -e '/^OPT/s,-O3,-O2,' \
 	    -e 's/$(LTO_CFLAGS)//g' \
+	    -e 's/-fstack-protector /-fstack-protector-strong /g' \
+	    -e 's/-specs=[^ ]*//g' \
+	    -e 's/-fdebug-prefix-map=[^ ]*//g' \
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shared)/Makefile \
@@ -1198,17 +1213,13 @@ endif
 	rm -rf $(d)-dbg
 	$(MAKE) -C $(buildd_debug) install DESTDIR=$(CURDIR)/$(d)-dbg
 	: # install the Makefile of the shared python debug build
-	sed -e '/^OPT/s,-O3,-O2,' \
-	    -e 's/$(LTO_CFLAGS)//g' \
-	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
-	    -e '/BLDLIBRARY/s/-L\. //' \
+	sed $(sysconfig_substflags) \
 		$(buildd_shdebug)/Makefile \
 		> $(d)-dbg/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/Makefile
-	sed -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
-	    -e '/BLDLIBRARY/s/-L\. //' \
+	sed $(sysconfig_substflags) \
 		$(buildd_shdebug)/$(shell cat $(buildd_shdebug)/pybuilddir.txt)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
 		> $(d)-dbg/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py
-	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
+	sed -i $(sysconfig_substflags) \
 		$(d)-dbg/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 
 	mv $(d)-dbg/usr/lib/libpython*.a $(d)-dbg/usr/lib/$(DEB_HOST_MULTIARCH)/
