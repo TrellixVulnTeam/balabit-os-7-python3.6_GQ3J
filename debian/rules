@@ -227,6 +227,14 @@ sysconfig_substflags = \
 	-e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	-e '/BLDLIBRARY/s/-L\. //'
 
+ifneq ($(with_fpectl),yes)
+  ifeq ($(derivative),Ubuntu)
+    arch_substvars =  '-Vpyfpe:Breaks=$(shell tr '\n' ' ' < debian/pyfpe-breaks.$(derivative))'
+  else ifeq ($(derivative),Debian)
+    arch_substvars =  '-Vpyfpe:Breaks=$(shell tr '\n' ' ' < debian/pyfpe-breaks.$(derivative))'
+  endif
+endif
+
 make_build_target = $(if $(with_pgo),profile-opt)
 
 buildd_static	:= $(CURDIR)/build-static
@@ -737,7 +745,6 @@ control-file:
 	    -e "s/@bd_qual@/$(bd_qual)/g" \
 	    -e "s/@bd_gcc@/$(bd_gcc)/g" \
 	    -e "s/@bd_dpkgdev@/$(bd_dpkgdev)/g" \
-	    -e "s/PYFPE_BREAKS/$(if $(filter yes,$(with_fpectl)),,$$(tr '\n' ' ' < debian/pyfpe-breaks.$(derivative)))/g" \
 		debian/control.in \
 		$(if $(with_udeb),debian/control.udeb) \
 	      | $(ma_filter) \
@@ -1065,7 +1072,7 @@ endif
 	: # The test framework into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_lbase) --sourcedir=$(d) \
 		$(scriptdir)/test/{libregrtest,support} \
-		$(scriptdir)/test/{regrtest,test_support,__init__,pystone}.py
+		$(scriptdir)/test/{regrtest,test_support,__init__,__main__,pystone}.py
 
 	: # The complete testsuite into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_ltst) --sourcedir=$(d) \
@@ -1486,7 +1493,7 @@ endif
 	dep=`sed -n '/^shlibs:Depends/s/[^=]*=\(.*\)/\1/p' $(d_min).substvars | awk -v RS=', ' -v ORS=', ' '/^libc6/ { print }'`; \
 	echo "shlibs:Pre-Depends=$$dep" >> $(d_min).substvars
 	sed -i '/^shlibs:Depends/s/libc6[^,]*[, ]*//g' $(d_min).substvars
-	dh_gencontrol -a
+	dh_gencontrol -a -- $(arch_substvars)
 	dh_md5sums -a
 	dh_builddeb -a
 

@@ -17,7 +17,7 @@ Build-Depends: debhelper (>= 9), @bd_dpkgdev@
   mime-support, netbase, bzip2, time, python3@bd_qual@,
   net-tools, xvfb, xauth
 Build-Depends-Indep: python3-sphinx, texinfo
-Standards-Version: 4.1.4
+Standards-Version: 4.2.1
 Vcs-Browser: https://code.launchpad.net/~doko/python/pkg@VER@-debian
 Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@-debian
 XS-Testsuite: autopkgtest
@@ -61,8 +61,9 @@ Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
 Breaks: python3-tk (<< 3.6.4~rc1-2),
   python3-distutils (<< 3.6.5-2),
-  libmpdec2 (<< 2.4.2), PYFPE_BREAKS
-Replaces: lib@PVER@-testsuite (<< 3.6.2-2),
+  lib@PVER@-testsuite (<< 3.6.6-2),
+  libmpdec2 (<< 2.4.2), ${pyfpe:Breaks}
+Replaces: lib@PVER@-testsuite (<< 3.6.6-2),
   python3-distutils (<< 3.6.5-2),
 Description: Interactive high-level object-oriented language (standard library, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version

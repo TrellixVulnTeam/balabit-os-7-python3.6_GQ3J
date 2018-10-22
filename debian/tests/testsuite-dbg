@@ -34,22 +34,9 @@ sh $debian_dir/locale-gen
 export LANG=C
 
 TESTPYTHON="python3.6dm -W default -bb -E -R -m test"
-TESTOPTS="-j 1 -w -uall,-network,-urlfetch,-gui"
 TESTEXCLUSIONS="-x"
 
-# test_dbm: Fails from time to time ...
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_dbm"
-
-# test_ensurepip: not yet installed, http://bugs.debian.org/732703
-# ... and then test_venv fails too
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_ensurepip test_venv "
-
-# test_site: Investigate why this fails ... our package has one sitedir less
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_site"
-
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_socket"
-
-TESTEXCLUSIONS="$TESTEXCLUSIONS test_idle"
+. $debian_dir/tests/test-common.sh
 
 if [ "$su_user" = nobody ]; then
   log=/dev/null

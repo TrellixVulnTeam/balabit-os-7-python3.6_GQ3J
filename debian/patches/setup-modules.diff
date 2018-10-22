@@ -41,8 +41,8 @@ Index: b/Modules/Setup.dist
  
  # Lee Busby's SIGFPE modules.
  # The library to link fpectl with is platform specific.
-@@ -376,7 +375,7 @@ _symtable symtablemodule.c
- #
+@@ -368,7 +367,7 @@ _symtable symtablemodule.c
+ # Interface to the Expat XML parser
  # More information on Expat can be found at www.libexpat.org.
  #
 -#pyexpat expat/xmlparse.c expat/xmlrole.c expat/xmltok.c pyexpat.c -I$(srcdir)/Modules/expat -DHAVE_EXPAT_CONFIG_H -DUSE_PYEXPAT_CAPI
