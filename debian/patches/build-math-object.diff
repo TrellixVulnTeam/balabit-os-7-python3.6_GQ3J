@@ -1,5 +1,3 @@
-Index: b/Makefile.pre.in
-===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
 @@ -21,7 +21,7 @@
@@ -11,7 +9,7 @@ Index: b/Makefile.pre.in
  MODLIBS=        _MODLIBS_
  
  # === Variables set by configure
-@@ -576,8 +576,9 @@ pybuilddir.txt: $(BUILDPYTHON)
+@@ -575,8 +575,9 @@ pybuilddir.txt: $(BUILDPYTHON)
  	fi
  
  # This is shared by the math and cmath modules

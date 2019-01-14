@@ -1,10 +1,8 @@
 # DP: Call the linker with -O1 -Bsymbolic-functions
 
-Index: b/configure.ac
-===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2554,8 +2554,8 @@ then
+@@ -2591,8 +2591,8 @@ then
  		fi
  		;;
  	Linux*|GNU*|QNX*)
@@ -15,7 +13,7 @@ Index: b/configure.ac
  	BSD/OS*/4*)
  		LDSHARED="gcc -shared"
  		LDCXXSHARED="g++ -shared";;
-@@ -2655,7 +2655,7 @@ then
+@@ -2692,7 +2692,7 @@ then
  #	    LINKFORSHARED="-Wl,-E -Wl,+s -Wl,+b\$(BINLIBDEST)/lib-dynload";;
  	BSD/OS/4*) LINKFORSHARED="-Xlinker -export-dynamic";;
  	Linux-android*) LINKFORSHARED="-pie -Xlinker -export-dynamic";;

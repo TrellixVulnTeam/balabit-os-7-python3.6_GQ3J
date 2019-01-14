@@ -1182,6 +1182,7 @@
  _PyEval_FiniThreads@Base @SVER@
  _PyEval_GetAsyncGenFinalizer@Base @SVER@
  _PyEval_GetAsyncGenFirstiter@Base @SVER@
+ _PyEval_GetBuiltinId@Base @SVER@
  _PyEval_GetCoroutineWrapper@Base @SVER@
  _PyEval_SetCoroutineWrapper@Base @SVER@
  _PyEval_GetSwitchInterval@Base @SVER@
@@ -1308,6 +1309,7 @@
  _PyLong_Sign@Base @SVER@
  _PyManagedBuffer_Type@Base @SVER@
  _PyMem_DumpTraceback@Base @SVER@
+ _PyMem_IsFreed@Base @SVER@
  _PyMem_PymallocEnabled@Base @SVER@
  _PyMem_RawStrdup@Base @SVER@
  _PyMem_SetupAllocators@Base @SVER@
@@ -1356,6 +1358,7 @@
  _PyObject_HasAttrId@Base @SVER@
  _PyObject_HasLen@Base @SVER@
  _PyObject_IsAbstract@Base @SVER@
+ _PyObject_IsFreed@Base @SVER@
  _PyObject_LookupSpecial@Base @SVER@
  _PyObject_New@Base @SVER@
  _PyObject_NewVar@Base @SVER@

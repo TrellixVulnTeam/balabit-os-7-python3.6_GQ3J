@@ -1,4 +1,5 @@
 #git-updates.diff
+revert-profile-opt-changes.diff
 deb-setup.diff
 deb-locations.diff
 distutils-install-layout.diff
