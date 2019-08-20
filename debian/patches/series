@@ -37,3 +37,10 @@ local-doc-references.diff
 doc-build-texinfo.diff
 riscv64.diff
 build-math-object.diff
+CVE-2018-20852.patch
+CVE-2019-5010.patch
+CVE-2019-9636.patch
+CVE-2019-9740.patch
+CVE-2019-9948.patch
+CVE-2019-10160-1.patch
+CVE-2019-10160-2.patch
