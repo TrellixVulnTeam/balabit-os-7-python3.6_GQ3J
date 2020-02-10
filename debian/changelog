@@ -1,3 +1,9 @@
+python3.6 (3.6.9-1~18.04bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Mon, 10 Feb 2020 17:19:57 +0100
+
 python3.6 (3.6.9-1~18.04) bionic-proposed; urgency=medium
 
   * SRU: LP: #1835738, backport 3.6.9 to 18.04.
