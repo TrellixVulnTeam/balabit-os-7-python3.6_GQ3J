@@ -1,3 +1,14 @@
+python3.6 (3.6.9-1~18.04ubuntu1.3) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: CRLF injection
+    - debian/patches/CVE-2020-26116.patch: prevent header injection
+      in http methods in Lib/httplib.py, Lib/test/test_httlib.py.
+    - CVE-2020-26116
+  * debian/patches/disabling_test_ttk_guionly.patch: disabling ttk_guionly
+    test which is causing a hang for ppc64el build.
+
+ -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Thu, 08 Oct 2020 09:12:24 -0300
+
 python3.6 (3.6.9-1~18.04ubuntu1.1bb1) bionic; urgency=medium
 
   * Balabit patched version
