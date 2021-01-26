@@ -48,3 +48,5 @@ CVE-2020-14422.patch
 CVE-2019-9674.patch
 CVE-2020-26116.patch
 disabling_test_ttk_guionly.patch
+CVE-2020-27619-3.6.patch
+CVE-2021-3177-3.6.patch
