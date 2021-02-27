@@ -1,3 +1,9 @@
+python3.6 (3.6.9-1~18.04ubuntu1.4bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Sat, 27 Feb 2021 04:23:36 +0100
+
 python3.6 (3.6.9-1~18.04ubuntu1.4) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Code execution from content received via HTTP
