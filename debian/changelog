@@ -1,3 +1,21 @@
+python3.6 (3.6.9-1~18.04ubuntu1.6) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Regular Expression Denial of Service
+     - debian/patches/CVE-2021-3733.patch: updates a regular expression in the 
+       urllib.request.AbstractBasicAuthHandler class which has a quadratic
+       worst-case time complexity and could be abused by a malicious HTTP
+       server to cause a Denial of Service condition for a client.
+     - CVE-2021-3733 
+  * SECURITY UPDATE: Denial of Service
+     - debian/patches/CVE-2021-3737.patch: addresses the potential for the
+       urllib http client to enter into an infinite loop and hang on a 100
+       Continue response from a malicious server.
+     - debian/patches/CVE-2021-3737_test-fix.patch: improves the regression
+       test in Lib/test/test_httplib.py
+     - CVE-2021-3737 
+
+ -- Ian Constantin <ian.constantin@canonical.com>  Wed, 08 Dec 2021 16:08:43 -0500
+
 python3.6 (3.6.9-1~18.04ubuntu1.4) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Code execution from content received via HTTP
