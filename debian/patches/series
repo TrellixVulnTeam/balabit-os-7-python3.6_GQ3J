@@ -53,3 +53,6 @@ CVE-2021-3177-3.6.patch
 CVE-2021-3733.patch
 CVE-2021-3737.patch
 CVE-2021-3737_test-fix.patch
+CVE-2021-3426.patch
+CVE-2021-4189.patch
+CVE-2022-0391.patch
