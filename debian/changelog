@@ -1,3 +1,24 @@
+python3.6 (3.6.9-1~18.04ubuntu1.7) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Expose sensitive information
+    - debian/patches/CVE-2021-3426.patch: remove pydoc getfile feature
+      in Lib/pydoc.py, Lib/test/test_pydoc.py.
+    - CVE-2021-3426
+  * SECURITY UPDATE: Expose sensitive information
+    - debian/patches/CVE-2021-4189.patch: alters ftplib.FTP class
+      behavior to not trust the IPv4 address sent from the remote
+      server when setting up a passive data channel in
+      resposne in Lib/ftplib.py, Lib/test/test_ftplib.py.
+    - CVE-2021-4189
+  * SECURITY UPDATE: Injection Attack
+    - debian/patches/CVE-2022-0391.patch: sanitize urls in urllib.parse
+      when it containing ASCII newline and tabs in
+      Doc/library/urllib.parse.rst, Lib/test/test_urlparse.py,
+      Lib/urllib/parse.py.
+    - CVE-2022-0391
+
+ -- Leonidas Da Silva Barbosa <leo.barbosa@canonical.com>  Tue, 15 Mar 2022 10:55:28 -0300
+
 python3.6 (3.6.9-1~18.04ubuntu1.6bb1) bionic; urgency=medium
 
   * Balabit patched version
