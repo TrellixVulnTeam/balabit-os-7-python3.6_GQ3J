@@ -1,3 +1,9 @@
+python3.6 (3.6.9-1~18.04ubuntu1.9bb1) bionic; urgency=medium
+
+  * Balabit patched version
+
+ -- Balabit Platform Team <devnull@dev.null>  Sat, 10 Dec 2022 04:28:18 +0100
+
 python3.6 (3.6.9-1~18.04ubuntu1.9) bionic-security; urgency=medium
 
   * SECURITY UPDATE: Denial of service
