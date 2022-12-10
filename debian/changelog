@@ -1,3 +1,12 @@
+python3.6 (3.6.9-1~18.04ubuntu1.9) bionic-security; urgency=medium
+
+  * SECURITY UPDATE: Denial of service
+    - debian/patches/CVE-2022-45061.patch: fix quadratic time idna decoding
+      in Lib/encodings/idna.py, Lib/test/test_codecs.py.
+    - CVE-2022-45061
+
+ -- Leonidas Da Silva Barbosa <leo.barbosa@canonical.com>  Fri, 25 Nov 2022 11:10:45 -0300
+
 python3.6 (3.6.9-1~18.04ubuntu1.8bb1) bionic; urgency=medium
 
   * Balabit patched version
